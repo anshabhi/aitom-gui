@@ -1,4 +1,4 @@
-<!--this page design was taken from https://threejs.org/examples/-->
+﻿<!--this page design was taken from https://threejs.org/examples/-->
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
@@ -11,46 +11,46 @@
 	</head>
 	<body>
 {% block body %}
-		<div id="panel">
+        <div id="panel">
 
-			<div id="header">
-				<h1><a href="https://github.com/xulabs/aitom">AITom GUI</a></h1>
+            <div id="header">
+                <h1><a href="https://github.com/xulabs/aitom">AITom GUI</a></h1>
 
-				<div id="sections">
+                <div id="sections">
 
-					<span class="selected">Upload an MRC file</span>
-				</div>
-
-
-			</div>
-
-			<div id="panelScrim"></div>
-
-			<div id="contentWrapper">
-
-				<div id="inputWrapper">
-					
-				</div>
-
-				<div id="content">
-				<form method="post" enctype="multipart/form-data" accept = ".mrc">
-    {% csrf_token %}
-    <input type="file" name="myfile">
-    <button type="submit">Upload</button>
-  </form>
-
-  {% if uploaded_file_url %}
-  
-    <script>
-    sessionStorage['model'] = '{{uploaded_file_url}}'
-    </script>
-  {% endif %}
+                    <span class="selected">Upload an MRC file</span>
+                </div>
 
 
-				</div>
-			</div>
+            </div>
 
-		</div>
+            <div id="panelScrim"></div>
+
+            <div id="contentWrapper">
+
+                <div id="inputWrapper">
+
+                </div>
+
+                <div id="content">
+                    <form method="post" enctype="multipart/form-data" accept=".mrc">
+                        {% csrf_token %}
+                        <input type="file" name="myfile">
+                        <button type="submit" formaction="api/model">Upload</button>
+                    </form>
+
+                    {% if uploaded_file_url %}
+
+                    <script>
+						sessionStorage['model'] = '{{uploaded_file_url}}'
+                    </script>
+                    {% endif %}
+
+
+                </div>
+            </div>
+
+        </div>
 
 		<iframe id="viewer" name="viewer" allowfullscreen allowvr onmousewheel="" src = "display"></iframe>
 
