@@ -20,12 +20,17 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import url, include
+from resumable.views import ResumableUploadView
 
 #expose the three required URLs
 urlpatterns = [
     path('', views.index, name='index'),
     path('display/',views.display,name='display'),
+    path('download/',views.download,name='download'),
     path('admin/', admin.site.urls),
     path('api/', include('backend.urls')),
+    path('getUploadForm/', views.getUploadForm,name='getUploadForm'),
+    path('getLibrary/', views.getLibrary,name='getLibrary'),
+    path('getInputForm/',views.getInputForm,name='getInputForm'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

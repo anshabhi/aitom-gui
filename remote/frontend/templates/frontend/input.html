@@ -1,0 +1,13 @@
+<form method="post" enctype="multipart/form-data">
+  Selected File is
+  <input readonly="readonly"  name="filename" value= {{filename }}>
+    {% csrf_token %}
+    {{ form.as_p }}
+
+
+    <button type="submit" formaction="/api/model-json" >Submit</button> 
+  </form>
+   
+<script>
+
+</script>   

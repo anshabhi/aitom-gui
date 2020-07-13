@@ -1,93 +1,243 @@
-<!--this page design was taken from https://threejs.org/examples/-->
-<!DOCTYPE html>
 {% load static %}
+
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>AITom frontend</title>
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link rel="shortcut icon" href=" {% static '/frontend/other/favicon.ico' %} " />
-		<link rel="stylesheet" type="text/css" href=" {% static '/frontend/css/main.css' %} ">
-	</head>
-	<body>
-{% block body %}
-		<div id="panel">
 
-			<div id="header">
-				<h1><a href="https://github.com/xulabs/aitom">AITom frontend</a></h1>
-
-				<div id="sections">
-
-					<span class="selected">Upload an MRC file</span>
-				</div>
-
-
-			</div>
-
-			<div id="panelScrim"></div>
-
-			<div id="contentWrapper">
-
-				<div id="inputWrapper">
-					
-				</div>
-
-				<div id="content">
-				<form method="post" enctype="multipart/form-data" accept = ".mrc">
-    {% csrf_token %}
-    <input type="file" name="myfile">
+<head>
+  <meta charset="UTF-8">
+  <title>AITom GUI</title>
+  <link rel="stylesheet" href="{% static '/frontend/css/icon.css' %}">
+  <link rel="stylesheet" href="{% static '/frontend/css/material.indigo-pink.min.css' %}">
+  <link rel="stylesheet" href=" {% static '/frontend/css/stepper.css' %} ">
+  <script src="{% static '/frontend/js/material.min.js' %}"></script>
+  <script src=" {% static '/frontend/js/stepper.min.js' %} "></script>
+  <script src="{% static '/frontend/js/jquery.min.js' %} "></script>
+  <link href="{% static '/frontend/css/iconcss.css' %}" rel='stylesheet' type='text/css'>
+  <link href="{% static '/frontend/css/main.css' %}" rel='stylesheet' type='text/css'>
+  <link rel="shortcut icon" href=" {% static '/frontend/other/favicon.ico' %} " />
+  <script src = " {% static '/frontend/js/resumable.js' %}"></script>
+  <style>
+   
     
-    <button type="submit" formaction="/api/model" >Upload</button>
-  </form>
+    .mdl-stepper-demo .mdl-stepper {
+      margin: 0;
+    }
+  </style>
+</head>
 
-  {% if uploaded_file_url %}
-  
-    <script>
-    sessionStorage['model'] = '{{uploaded_file_url}}'
-    </script>
-  {% endif %}
+<body>
+  <!-- style -->
+  <style>
+    .mdl-stepper > .mdl-step > .mdl-step__content {
+	  background-color: rgba(252, 252, 252, 0.2);
+	  width: auto;
+	  height: auto;
+	}
+	
+  </style>
+<div id="panel">
+
+  <div id="header">
+    <h1><a href="https://github.com/xulabs/aitom">AITom frontend</a></h1>
+
+    <div id="sections">
+
+      <span class="selected">Utility for exploring MRC file</span>
+    </div>
 
 
-				</div>
-			</div>
+  </div>
+  <div id="contentWrapper">
+
+    
+
+    <div id="content">
+   <!-- <form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+{{ form.as_p }}
+
+
+ <button type="submit" formaction="/api/model" >Upload</button> 
+</form> -->
+
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--12-col">
+    <!-- markup -->
+    <ul class="mdl-stepper mdl-stepper--feedback" id="demo-stepper-feedback">
+      <li class="mdl-step" id = "step1">
+        <span class="mdl-step__label">
+          <span class="mdl-step__title">
+            <span class="mdl-step__title-text">Please select how would you like to proceed</span>
+          </span>
+        </span>
+        <div class="mdl-step__content">
+          <form id ="inp">
+          <input type="radio" name = 'type' value="library" class="mdl-radio__button" checked><label>Browse the library for stored MRC files</label> 
+          <br><br>
+          <input type="radio" name = 'type' value="upload" class="mdl-radio__button"><label>Upload a new MRC file</label> 
+        </form>
+        </div>
+        <div class="mdl-step__actions">
+          <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised" data-stepper-next>
+            Continue
+          </button>
+          <button class="mdl-button mdl-js-button mdl-js-ripple-effect" data-stepper-cancel>
+            Cancel
+          </button>
+        </div>
+      </li>
+      <li class="mdl-step">
+        <span class="mdl-step__label">
+          <span class="mdl-step__title">
+            <span class="mdl-step__title-text">Choose MRC File</span>
+          </span>
+        </span>
+        <div class="mdl-step__content" id = "step2div">
+
 
 		</div>
+        <div class="mdl-step__actions">
+          <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised" data-stepper-next>
+            Continue
+          </button>
+          <button class="mdl-button mdl-js-button mdl-js-ripple-effect" data-stepper-cancel>
+            Cancel
+          </button>
+        </div>
+      </li>
+      <li class="mdl-step">
+        <span class="mdl-step__label">
+          <span class="mdl-step__title">
+            <span class="mdl-step__title-text">Input Zoom Values and submit</span>
+          </span>
+        </span>
+        <div class="mdl-step__content" id = "step3div"></div>
+        <div class="mdl-step__actions">
+          <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised" data-stepper-next>
+            Start Again
+          </button>
+         
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
 
-		<iframe id="viewer" name="viewer" allowfullscreen allowvr onmousewheel="" src = "/display"></iframe>
-
-        {% block extra_js %}
 
 
+    </div>
+  </div>
+
+</div>
+
+<iframe id="viewer" name="viewer" allowfullscreen allowvr onmousewheel="" src = "/display"></iframe>
+ 
+
+  <!-- script -->
+  <script>
+	 
+
+    (function () {
+		var csrftoken = '{{ csrf_token }}';
+
+$.queryJSON = function(type,url, data, callback) {
+
+return $.ajax({
+headers: { 
+  
+  'X-CSRFToken': csrftoken,  
+},
+'type': 'POST',
+'url': url,
+'data': JSON.stringify(data),
+
+'success': callback,
+
+'error': function(jqXHR, textStatus = 'error', errorThrown = 'Server Error') {
+
+	console.log(errorThrown,textStatus)
+}
+})
+}
+      // Stepper feedback demonstration 
+      var demoFeedback = function (e) {
+        var element = document.querySelector('.mdl-stepper#demo-stepper-feedback');
+
+        if (!element) return;
+
+        var stepper = element.MaterialStepper;
+        var steps = element.querySelectorAll('.mdl-step');
+        var step;
+
+        for (var i = 0; i < steps.length; i++) {
+          
+          step = steps[i];
+          if (i==0){
+          step.addEventListener('onstepnext', function (e) {
+            
+            
+          choice = $('input[name=type]:checked', '#inp').val()
+		  console.log(choice)
+
+          if (choice == 'library')
+          { 
+		 $.queryJSON('POST','/getLibrary/',{}, function(result){ 
+			 console.log(result)
+		    $("#step2div").html(result);
+	  });
+		 }
+         else if (choice == 'upload'){ 
+		 $.queryJSON('POST','/getUploadForm/',{}, function(result){ 
+			 console.log(result)
+		    $("#step2div").html(result);
+	  });
+		 }
+          
+          stepper.next();
+          });
+		  }
+		  else if (i==1){
+			
+			step.addEventListener('onstepnext', function (e) {
+            
+            
+			if (sessionStorage['mrcSelect'] != null)
+		{	
+			$.queryJSON('POST','/getInputForm/',[sessionStorage["mrcSelect"]], function(result){ 
+			 console.log(result)
+			 
+		    $("#step3div").html(result);
+	  });
+	  stepper.next();
 		
-		<script>
-
-		var panel = document.getElementById( 'panel' );
-		var content = document.getElementById( 'content' );
-		var viewer = document.getElementById( 'viewer' );
-		var filterInput = document.getElementById( 'filterInput' );
-		var exitSearchButton = document.getElementById( 'exitSearchButton' );
-		var expandButton = document.getElementById( 'expandButton' );
-		var viewSrcButton = document.getElementById( 'button' );
-		var panelScrim = document.getElementById( 'panelScrim' );
-
-		var links = {};
-		var selected = null;
-		var container = document.createElement( 'div' );
-
-		init();
-
-		function init() {
-
-
-
 		}
+			else
+			alert("Please upload a file or select a file")
+			});
 
-		
+		  }
+		  else if (i==2){
+			
 
-		
 
-		</script>
-		{% endblock extra_js %}
-{% endblock body %}
-	</body>
+		  }
+      }
+        element.addEventListener('onsteppercomplete', function (e) {
+          var toast = document.querySelector('#snackbar-stepper-complete');
+        
+          if (!toast) return false;
+        
+          toast.MaterialSnackbar.showSnackbar({
+            message: 'Stepper with feedback are completed',
+            timeout: 4000,
+            actionText: 'Ok'
+          });
+        });
+      };
+      
+      window.addEventListener('load', demoFeedback);
+    })();
+  </script>
+</body>
+
 </html>
