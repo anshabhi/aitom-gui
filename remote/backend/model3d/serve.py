@@ -70,10 +70,11 @@ def process(request):
         if not r.chunk_exists:
             r.process_chunk(chunk)
         if r.is_complete:
-            filename = 'mrc/' + str(storage.save(r.filename, r.file))
+            filename =  str(storage.save(r.filename, r.file))
             r.delete_chunks()
-            print(filename)
-            obj = contour(filename, filename.replace("mrc","vtk"))
+            #print(filename)
+            base = PROJECT_APP_PATH + '/uploads'
+            obj = contour(base + '/mrc/' + filename, base + '/vtk/' + filename.replace(".mrc",".vtk"))
             uploaded_file_url = urljoin('/uploads/vtk/', filename.replace(".mrc",".vtk"))
             #print(uploaded_file_url)
 
