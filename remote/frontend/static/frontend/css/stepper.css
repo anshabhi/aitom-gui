@@ -132,7 +132,7 @@
 /* STEPPER ON SMALL SCREENS */
 @media only screen and (max-width: 375px) {
   .mdl-stepper {
-    width: 100vw; }
+    width: 100%; }
 
   .mdl-grid .mdl-cell .mdl-stepper {
     margin-left: -16px; } }
@@ -140,8 +140,8 @@
 .mdl-stepper:not(.mdl-stepper--horizontal) > .mdl-step:not(:last-child):after {
   content: '';
   position: absolute;
-  top: 50px;
-  left: 37px;
+  top: 0px;
+  left: 0px;
   width: 1px;
   height: calc(100% - 24px);
   background-color: rgba(0, 0, 0, 0.1); }
@@ -153,13 +153,13 @@
 /* STEP */
 .mdl-step {
   position: relative;
-  height: 460px; }
+  height: auto; }
   .mdl-step:not(.is-active) {
     height: initial !important; }
   .mdl-step:not(:last-child) {
-    margin-bottom: 24px; }
+    margin-bottom: 0px; }
     .mdl-step:not(:last-child).is-active {
-      margin-bottom: 36px; }
+      margin-bottom: 0px; }
   .mdl-step .mdl-step-error-message {
     display: none; }
   .mdl-step > * {
@@ -276,16 +276,16 @@
   height: calc(100% - 132px);
   width: inherit;
   overflow: auto;
-  margin-left: 64px;
-  margin-right: 24px; }
+  margin-left: 0px;
+  margin-right: 0px; }
 
 /* STEP ACTIONS */
 .mdl-step__actions {
   display: none;
   padding-top: 16px;
   height: 48px;
-  margin-left: 64px;
-  margin-right: 24px; }
+  margin-left: 0px;
+  margin-right: 0px; }
   .mdl-step__actions [data-stepper-next].mdl-button--raised.mdl-button--colored {
     background-color: #2196F3;
     box-shadow: none; }
