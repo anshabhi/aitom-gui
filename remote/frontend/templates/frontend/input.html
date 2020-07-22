@@ -1,13 +1,26 @@
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" id = "inpCord">
   Selected File is
   <input readonly="readonly"  name="filename" value= {{filename }}>
+  <input type="hidden" name = "method" value="{{ method }}">
     {% csrf_token %}
     {{ form.as_p }}
 
 
-    <button type="submit" formaction="/api/model-json" >Submit</button> 
+    <button type="click" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Submit</button> 
   </form>
    
 <script>
+  $('#inpCord').submit(function () {
+    //console.log($('#inpCord').serializeArray())
+    var frame = document.getElementById("viewer")
 
+    frame.src = '/display'
+    $.queryJSON('POST','/api/model-json',[$('#inpCord').serializeArray()], function(result){ 
+			 
+       sessionStorage['model'] = result
+   });
+ return false;
+});
+	
+  
 </script>   

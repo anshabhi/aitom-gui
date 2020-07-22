@@ -36,12 +36,19 @@
 	line-height: 24px;
 	font-weight: 500;
 }
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
   </style>
 </head>
 
 <body>
     <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
-     <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+     <header class="demo-header mdl-layout__header mdl-color--white-100 mdl-color-text--black-600">
         <div class="mdl-layout__header-row">
           <span class="mdl-layout-title">AITOM frontend</span>
           <span>Utility for exploring MRC file</span>
@@ -65,7 +72,7 @@
           </ul>
         </div>
       </header> <!-- for adding a header in future -->
-      <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+      <div class="demo-drawer mdl-layout__drawer mdl-color--black-900 mdl-color-text--black-50">
         <header class="demo-drawer-header">    
           </header>
 
@@ -79,7 +86,7 @@
          
          <div class="mdl-grid">
            <div class="mdl-cell mdl-cell--12-col">
-             <!-- markup -->
+             <!-- Stepper for carrying out the process -->
              <ul class="mdl-stepper mdl-stepper--feedback" id="demo-stepper-feedback">
                <li class="mdl-step" id = "step1">
                  <span class="mdl-step__label">
@@ -88,6 +95,7 @@
                    </span>
                  </span>
                  <div class="mdl-step__content">
+                   <!--Step 1-->
                    <form id ="inp">
                    <input type="radio" name = 'type' value="library" class="mdl-radio__button" checked><label>Browse the library for stored MRC files</label> 
                    <br><br>
@@ -102,6 +110,7 @@
                  </div>
                </li>
                <li class="mdl-step">
+                                    <!--Step 2-->
                  <span class="mdl-step__label">
                    <span class="mdl-step__title">
                      <span class="mdl-step__title-text">Choose MRC File</span>
@@ -119,6 +128,7 @@
                  </div>
                </li>
                <li class="mdl-step">
+                                    <!--Step 3-->
                  <span class="mdl-step__label">
                    <span class="mdl-step__title">
                      <span class="mdl-step__title-text">Input Zoom Values and submit</span>
@@ -126,7 +136,7 @@
                  </span>
                  <div class="mdl-step__content" id = "step3div"></div>
                  <div class="mdl-step__actions">
-                   <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised" data-stepper-next>
+                   <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised" onclick="location.reload()">
                      Start Again
                    </button>
                   
@@ -142,9 +152,22 @@
       </div>
       <main class="mdl-layout__content mdl-color--grey-100">
         <div class="mdl-grid demo-content">
-      <iframe id="viewer" name="viewer" allowfullscreen allowvr onmousewheel="" src = "/display"></iframe>
+      <iframe id="viewer" name="viewer" allowfullscreen allowvr onmousewheel="" src = "/inst1/"></iframe>
         </div>
       </main>
+        <!--Dialog Box For Errors-->
+
+      <dialog class="mdl-dialog">
+        <h4 class="mdl-dialog__title">An Error Occured</h4>
+        <div class="mdl-dialog__content">
+          <p id = "error">
+            
+          </p>
+        </div>
+        <div class="mdl-dialog__actions">
+          <button type="button" class="mdl-button close">Close</button>
+        </div>
+      </dialog>
     </div>
   <!-- script -->
   <script>
@@ -155,7 +178,7 @@
 
 $.queryJSON = function(type,url, data, callback) {
 
-return $.ajax({
+return $.ajax({ //Helper function for errors
 headers: { 
   
   'X-CSRFToken': csrftoken,  
@@ -167,13 +190,23 @@ headers: {
 'success': callback,
 
 'error': function(jqXHR, textStatus = 'error', errorThrown = 'Server Error') {
-
-	console.log(errorThrown,textStatus)
+//Show dialog box in case of error
+$('#error').html('<h1>' + errorThrown + '</h1><br><br>' + jqXHR.responseText )
+	var dialog = document.querySelector('dialog');
+    if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+    dialog.showModal();
+    
+    dialog.querySelector('.close').addEventListener('click', function() {
+      dialog.close();
+    });
 }
 })
 }
-      // Stepper feedback demonstration 
+      // MDL IO Stepper Implementation for executing application flow
       var demoFeedback = function (e) {
+
         var element = document.querySelector('.mdl-stepper#demo-stepper-feedback');
 
         if (!element) return;
@@ -181,7 +214,7 @@ headers: {
         var stepper = element.MaterialStepper;
         var steps = element.querySelectorAll('.mdl-step');
         var step;
-
+        var frame = document.getElementById("viewer")
         for (var i = 0; i < steps.length; i++) {
           
           step = steps[i];
@@ -195,17 +228,17 @@ headers: {
           if (choice == 'library')
           { 
 		 $.queryJSON('POST','/getLibrary/',{}, function(result){ 
-			 console.log(result)
+			// console.log(result)
 		    $("#step2div").html(result);
 	  });
 		 }
          else if (choice == 'upload'){ 
 		 $.queryJSON('POST','/getUploadForm/',{}, function(result){ 
-			 console.log(result)
+			// console.log(result)
 		    $("#step2div").html(result);
 	  });
 		 }
-          
+          frame.src = '/inst2' //Update Instructions
           stepper.next();
           });
 		  }
@@ -216,11 +249,12 @@ headers: {
             
 			if (sessionStorage['mrcSelect'] != null)
 		{	
-			$.queryJSON('POST','/getInputForm/',[sessionStorage["mrcSelect"]], function(result){ 
-			 console.log(result)
+			$.queryJSON('POST','/getInputForm/',{filename:sessionStorage["mrcSelect"],method:sessionStorage["method"]}, function(result){ 
+			 //console.log(result)
 			 
 		    $("#step3div").html(result);
 	  });
+    frame.src = '/inst3'
 	  stepper.next();
 		
 		}
@@ -231,22 +265,27 @@ headers: {
 		  }
 		  else if (i==2){
        
-       // stepper.back()
-       step.addEventListener('onstepnext', function (e) {
-            
-            
-        stepper.goto(1);
-            });
-
-		  }
+       //Last Stepper, nothing to process.
       }
-        element.addEventListener('onsteppercomplete', function (e) {
-          stepper.goto(1);
-        });
+        
       };
-      
+      }
       window.addEventListener('load', demoFeedback);
     })();
+    //Add loader for AJAX Requests
+    $('body').append($('<div/>', {
+  id: 'loadingDiv',
+  class: 'popup',
+  html: "<img src = '{% static '/frontend/other/ajax-loader.gif' %}' alt = 'loading please wait'>"  
+}));
+var $loading = $('#loadingDiv').hide();
+$(document)
+  .ajaxStart(function () {
+    $loading.show();
+  })
+  .ajaxStop(function () {
+    $loading.hide();
+  });
   </script>
   
 </body>

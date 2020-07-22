@@ -21,10 +21,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import url, include
 
-#expose the three required URLs
+#expose the required URLs
+#a script with 'api' prefix goes to backend for handling
+#all other url are handled by front end modules
 urlpatterns = [
     path('', views.index, name='index'),
     path('display/',views.display,name='display'),
+    path('inst1/',views.inst1,name='inst1'),
+    path('inst2/',views.inst2,name='inst2'),
+    path('inst3/',views.inst3,name='inst3'),
     path('download/',views.download,name='download'),
     path('admin/', admin.site.urls),
     path('api/', include('backend.urls')),
