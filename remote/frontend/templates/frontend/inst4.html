@@ -31,25 +31,36 @@
       width: 300px;
     }
     </style>
-    <p class="typo-styles__demo mdl-typography--display-3">Welcome to AITOm GUI!</p>
-    <p class="typo-styles__demo mdl-typography--display-1">This tool is being developed at Xu Labs, CMU to aid the exploration of mrc models</p>
-    <p class="typo-styles__demo mdl-typography--display-1">Currently, Zooming into a model and extractin a slice is supported</p>
-    <p class="typo-styles__demo mdl-typography--title">Kindly Select How Would You Like to get started</p>
-    <ul class="demo-list-item mdl-list">
-      <li class="mdl-list__item">
-        <span>
-          Choose an MRC file already stored on the server
-        </span>
-      </li>
-      <li class="mdl-list__item">
-        <span>
-            Upload Your own MRC file for 1 time use
-        </span>
-      </li>
-      
-    </ul>
+Now, you can see the name of file that you have selected.
+<br> Enter the coordinates for zooming in the following order:
+<ol>
+<li>Left Upper X</li>
+<li>Left Upper Y</li>
+<li>Left Upper Z</li>
+<li>Right Down X</li>
+<li>Right Down Y</li>
+<li>Right Down Z</li>
+</ol>
+Kindly take care that left-up point should be smaller than right-down point.
+<br><br>
 
-  
+After you click on submit, some magic for extracting a new zoomed in model will occur, and you will be able to see the new model here :)
+<br><br>
+OR
+<br> Enter the coordinates for slicing in the following order:
+<ol>
+<li>Centre X</li>
+<li>Centre Y</li>
+<li>Centre Z</li>
+<li>Rotation X</li>
+<li>Rotation Y</li>
+<li>Rotation Z</li>
+</ol>
+
+<br><br>
+
+After you click on submit, some magic for extracting a slice of model will occur, and you will be able to see the slice here :)
+<br><br>  
 </body>
 
 </html>

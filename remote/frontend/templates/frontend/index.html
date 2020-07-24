@@ -127,16 +127,38 @@
                  
                  </div>
                </li>
-               <li class="mdl-step">
-                                    <!--Step 3-->
+                <li class="mdl-step">
+                              <!--Step 3-->
+                    <span class="mdl-step__label">
+                    <span class="mdl-step__title">
+                    <span class="mdl-step__title-text">Choose Your Desired Operation</span>
+                    </span>
+                    </span>
+                    <div class="mdl-step__content">
+                    <!--Step 1-->
+                    <form id ="op">
+                    <input type="radio" name = 'op' value="library" class="mdl-radio__button" checked onclick="sessionStorage['op'] = 1"><label>Zoom</label> 
+                    <br><br>
+                    <input type="radio" name = 'op' value="upload" class="mdl-radio__button" onclick="sessionStorage['op'] = 2"><label>Slice</label> 
+                    </form>
+                    </div>
+                    <div class="mdl-step__actions">
+                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised" data-stepper-next>
+                    Continue
+                    </button>
+                               
+                    </div>
+              </li>
+                 <li class="mdl-step">
+                                    <!--Step 4-->
                  <span class="mdl-step__label">
                    <span class="mdl-step__title">
                      <span class="mdl-step__title-text">Input Zoom Values and submit</span>
                    </span>
                  </span>
-                 <div class="mdl-step__content" id = "step3div"></div>
+                 <div class="mdl-step__content" id = "step4div"></div>
                  <div class="mdl-step__actions">
-                   <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised" onclick="location.reload()">
+                   <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored mdl-button--raised" onclick="sessionStorage.clear();location.reload()">
                      Start Again
                    </button>
                   
@@ -204,6 +226,21 @@ $('#error').html('<h1>' + errorThrown + '</h1><br><br>' + jqXHR.responseText )
 }
 })
 }
+    //Add loader for AJAX Requests
+
+$('body').append($('<div/>', {
+  id: 'loadingDiv',
+  class: 'popup',
+  html: "<img src = '{% static '/frontend/other/ajax-loader.gif' %}' alt = 'loading please wait'>"  
+}));
+var $loading = $('#loadingDiv').hide();
+$(document)
+  .ajaxStart(function () {
+    $loading.show();
+  })
+  .ajaxStop(function () {
+    $loading.hide();
+  });
       // MDL IO Stepper Implementation for executing application flow
       var demoFeedback = function (e) {
 
@@ -215,10 +252,11 @@ $('#error').html('<h1>' + errorThrown + '</h1><br><br>' + jqXHR.responseText )
         var steps = element.querySelectorAll('.mdl-step');
         var step;
         var frame = document.getElementById("viewer")
-        for (var i = 0; i < steps.length; i++) {
+        for (var j = 0; j < steps.length; j++) {
           
-          step = steps[i];
-          if (i==0){
+          step = steps[j];
+          i = j+1 //to avoid confusion with div id naming
+          if (i==1){
           step.addEventListener('onstepnext', function (e) {
             
             
@@ -242,50 +280,47 @@ $('#error').html('<h1>' + errorThrown + '</h1><br><br>' + jqXHR.responseText )
           stepper.next();
           });
 		  }
-		  else if (i==1){
-			
-			step.addEventListener('onstepnext', function (e) {
-            
-            
-			if (sessionStorage['mrcSelect'] != null)
-		{	
-			$.queryJSON('POST','/getInputForm/',{filename:sessionStorage["mrcSelect"],method:sessionStorage["method"]}, function(result){ 
-			 //console.log(result)
-			 
-		    $("#step3div").html(result);
-	  });
-    frame.src = '/inst3'
-	  stepper.next();
-		
-		}
-			else
-			alert("Please upload a file or select a file")
-			});
-
-		  }
 		  else if (i==2){
-       
-       //Last Stepper, nothing to process.
+			
+        step.addEventListener('onstepnext', function (e) {
+          frame.src = '/inst3' //just update the instructions page nothing else to do as choice for stepper 3 is a static radio form.
+         stepper.next();
+        })
+		  } 
+		  else if (i==3){
+        sessionStorage["op"] = 1 //set zoom as default, it will be updated by radio above if the user does change
+        step.addEventListener('onstepnext', function (e) {
+            
+            
+            if (sessionStorage['mrcSelect'] != null)
+          {	
+            $.queryJSON('POST','/getInputForm/',{filename:sessionStorage["mrcSelect"],method:sessionStorage["method"],op:sessionStorage["op"]}, function(result){ 
+             //console.log(result)
+             
+              $("#step4div").html(result);
+              frame.src = '/inst4'
+
+          });
+          stepper.next();
+          
+          }
+            else
+            alert("Please upload a file or select a file")
+            });
       }
+      else if (i==4){
+      //Last Stepper, nothing to process.
+      step.addEventListener('onstepnext', function (e) {
+           stepper.next();
+
+            })      }
         
       };
       }
       window.addEventListener('load', demoFeedback);
+
     })();
-    //Add loader for AJAX Requests
-    $('body').append($('<div/>', {
-  id: 'loadingDiv',
-  class: 'popup',
-  html: "<img src = '{% static '/frontend/other/ajax-loader.gif' %}' alt = 'loading please wait'>"  
-}));
-var $loading = $('#loadingDiv').hide();
-$(document)
-  .ajaxStart(function () {
-    $loading.show();
-  })
-  .ajaxStop(function () {
-    $loading.hide();
-  });
+   
   </script>
   
 </body>

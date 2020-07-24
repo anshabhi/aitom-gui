@@ -17,50 +17,7 @@ Point = namedtuple('Point', ['x', 'y', 'z'])
 PROJECT_APP_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_APP_PATH = os.path.abspath(os.path.join(PROJECT_APP_PATH, os.pardir)) #1 level parent
 PROJECT_APP_PATH = os.path.abspath(os.path.join(PROJECT_APP_PATH, os.pardir)) #2 level parent (root directory)
-"""
-def process(request: HttpRequest):
-    #check = request_check(request)
-    #if check: return check
 
-
-    if request.FILES['myfile']:
-        myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save('test.mrc', myfile.file)
-        obj = contour(filename, filename.replace(".mrc",".vtk"))
-        #print('here')
-        #filename = fs.save('test.vtk', obj)
-     #   uploaded_file_url = fs.url(filename)
-        uploaded_file_url = urljoin('/uploads/', filename.replace(".mrc",".vtk"))
-        print(uploaded_file_url)
-        return render(request, PROJECT_APP_PATH + '/frontend/templates/frontend/index.html', {
-            'uploaded_file_url': uploaded_file_url
-        })
-
-#New model field based process()
-def process(request):
-    if request.method == 'POST':
-
-        form = DocumentForm(request.POST, request.FILES)
-       # print(form.is_valid())
-        if form.is_valid():
-        #if True:
-            filename = str(form.save().document)
-
-
-            obj = contour(filename, filename.replace(".mrc",".vtk"))
-            uploaded_file_url = urljoin('/uploads/', filename.replace(".mrc",".vtk"))
-            #print(uploaded_file_url)
-            return render(request, PROJECT_APP_PATH + '/frontend/templates/frontend/index.html', {'uploaded_file_url': uploaded_file_url},{
-        'form': form
-    })
-    else:
-        form = DocumentForm()
-    return render(request, PROJECT_APP_PATH + '/frontend/templates/frontend/index.html', {
-        'form': form
-    })
-
-"""
 
 from django2_resumable.files import ResumableFile, get_storage, get_chunks_upload_to
 
@@ -80,6 +37,7 @@ def process(request):
             base = PROJECT_APP_PATH + '/uploads'
             base_temp = PROJECT_APP_PATH + '/temp'
             filepath_mrc = base + '/mrc/' + filename
+            #No need to convert a newly uploaded MRC file to VTK at this stage. We will do it later when /api/json is called
             #filepath_vtk = base + '/vtk/' + filename.replace(".mrc",".vtk") 
             #obj = contour(filepath_mrc, filepath_vtk)
             #delete the uploaded file

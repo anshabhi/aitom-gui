@@ -12,7 +12,7 @@ class Document(models.Model):
     #uploaded_at = models.DateTimeField(auto_now_add=True) 
     
 
-class Input(models.Model):
+class zoomInput(models.Model):
     #define a form with 6 input fields for coordinates
     luX = models.IntegerField(default=0)
     luY = models.IntegerField(default=0)
@@ -22,3 +22,20 @@ class Input(models.Model):
     rdY = models.IntegerField(default=0)
     rdZ = models.IntegerField(default=0)
 
+class sliceInput(models.Model):
+    #define a form with 1 select for default plane 6 input fields for coordinates
+    Default_Plane = [
+    ('xoy', 'XOY'),
+    ('yoz', 'YOZ'),
+    ('xoz', 'XOZ')
+]
+    plane = models.CharField(max_length=3,choices=Default_Plane,default='XOY')
+	
+    cX = models.IntegerField(default=0)
+    cY = models.IntegerField(default=0)
+    cZ = models.IntegerField(default=0)
+    
+    rX = models.IntegerField(default=0)
+    rY = models.IntegerField(default=0)
+    rZ = models.IntegerField(default=0)
+	

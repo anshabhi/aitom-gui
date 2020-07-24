@@ -5,7 +5,7 @@ import os.path
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.conf import settings
 from django_server.models import Document
-from django_server.forms import DocumentForm,InputForm
+from django_server.forms import DocumentForm,zoomForm,sliceForm
 from django.http import StreamingHttpResponse
 from wsgiref.util import FileWrapper
 from django import forms
@@ -27,7 +27,11 @@ def index(request):
 #just serve display.html, without any extra fields. xframe options enabled for display and inst1,2,3 to allow embedding into an iframe 
 def display(request):
 #the display loader with three.js on the frontend     
-    return render(request,PROJECT_APP_PATH + '/frontend/templates/frontend/display.html')     
+    return render(request,PROJECT_APP_PATH + '/frontend/templates/frontend/display.html')
+@xframe_options_exempt    
+def disp_img(request):
+#the display loader with three.js on the frontend     
+    return render(request,PROJECT_APP_PATH + '/frontend/templates/frontend/disp-img.html')         
 @xframe_options_exempt 
 def inst1(request):
 #introduction and first instruction page     
@@ -39,7 +43,11 @@ def inst2(request):
 @xframe_options_exempt 
 def inst3(request):
 #third instruction page     
-    return render(request,PROJECT_APP_PATH + '/frontend/templates/frontend/inst3.html')             
+    return render(request,PROJECT_APP_PATH + '/frontend/templates/frontend/inst3.html')  
+@xframe_options_exempt 
+def inst4(request):
+#third instruction page     
+    return render(request,PROJECT_APP_PATH + '/frontend/templates/frontend/inst4.html')                 
 
 # Function for serving VTK files chunk by chunk, this method is more efficient than loading entire VTK file into memory at once    
 #Implemented with help from: https://stackoverflow.com/questions/43591440/django-1-11-download-file-chunk-by-chunk     
@@ -85,17 +93,26 @@ def getLibrary(request):
     })
 
 def getInputForm(request):
-    form = InputForm()
+
     #serve the form for inputting values to zoom into
     req = list(dict((request.POST)).keys())[0] #convert post request values to useable format
        #using this non standard approach cause I can't figure out why Query Dict is not loading properly with AJAX json requests
-
+    	
     req.replace("[[","[")
     req.replace("]]","]")
     req = ast.literal_eval(req) #covert string to dictionary using ast
-    
+    op = int(req['op'])
+   
+    if op == 1: #zoom
+    	form = zoomForm()
+    	url = '/api/model-json'
+    elif op == 2: #slice
+    	form = sliceForm()	
+    	url = '/api/slice'
     
     return render(request, PROJECT_APP_PATH + '/frontend/templates/frontend/input.html', {
         'form': form,'filename':req["filename"],
-    'method': req["method"]  
+    'method': req["method"],
+    'op' : req["op"],
+    'request_url': url
     })    

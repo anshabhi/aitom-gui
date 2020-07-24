@@ -26,10 +26,12 @@ from django.conf.urls import url, include
 #all other url are handled by front end modules
 urlpatterns = [
     path('', views.index, name='index'),
-    path('display/',views.display,name='display'),
     path('inst1/',views.inst1,name='inst1'),
     path('inst2/',views.inst2,name='inst2'),
     path('inst3/',views.inst3,name='inst3'),
+    path('inst4/',views.inst4,name='inst4'),
+    path('display/',views.display,name='display'),
+    path('disp-img/',views.disp_img,name='disp_img'),
     path('download/',views.download,name='download'),
     path('admin/', admin.site.urls),
     path('api/', include('backend.urls')),
