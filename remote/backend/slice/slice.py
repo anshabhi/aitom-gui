@@ -1,4 +1,7 @@
 ﻿from math import tan, pi, atan, sin, cos
+import matplotlib
+# avoid UserWarning: Starting a Matplotlib GUI outside of the main thread will likely fail.
+matplotlib.use('agg')
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot as plt
 import numpy as np
@@ -78,7 +81,7 @@ def slice3d(model, center, x_rot: float, y_rot: float, z_rot: float, default_pla
     base = (A ** 2 + B ** 2 + C ** 2) ** 0.5
     rot_matrix = get_rotation_matrix(center, x_rot, y_rot, z_rot, reverse=True)
     ret = []
-    fig = plt.figure()
+    fig = plt.figure(frameon=False)
     ax = fig.add_subplot(221, projection='3d')
     xs, ys, zs = [], [], []
     mp = PointMap()
